@@ -2,14 +2,15 @@ function Population() {
   this.drones = []
   this.popsize = 100
   this.matingPool = []
+  this.safeTries = 500
 
   for (let i = 0; i < this.popsize; i++) {
     this.drones[i] = new Drone();
   }
 
-  this.update = (target) => {
+  this.update = (target, obstacles) => {
     this.drones.forEach(drone => {
-      drone.update(target)
+      drone.update(target, obstacles)
       drone.draw()    
     })
   }
@@ -46,7 +47,14 @@ function Population() {
 
     for (let i = 0; i < this.popsize; i++) {
       const parentA = random(this.matingPool).dna
-      const parentB = random(this.matingPool).dna
+      let parentB = random(this.matingPool).dna
+
+      let tries = 0
+      while (parentB === parentA && tries < this.safeTries) {
+        parentB = random(this.matingPool).dna
+        tries++
+      }
+
       const child = parentA.crossover(parentB)
 
       newPopulation[i] = new Drone(child)
