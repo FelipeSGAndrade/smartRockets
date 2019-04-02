@@ -56,6 +56,7 @@ function Population() {
       }
 
       const child = parentA.crossover(parentB)
+      child.mutate()
 
       newPopulation[i] = new Drone(child)
     }

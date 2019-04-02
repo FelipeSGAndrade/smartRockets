@@ -5,6 +5,7 @@ function Drone(dna) {
   this.fitness = 0
   this.completed = false
   this.crashed = false
+  this.framesToComplete = null;
 
   if (dna)
     this.dna = dna
@@ -23,12 +24,18 @@ function Drone(dna) {
   }
 
   this.verifyTarget = (target) => {
+    if (this.completed) return
+
     const distance = dist(this.position.x, this.position.y, target.position.x, target.position.y)
-    if (distance < target.radius)
+    if (distance < 10) {
       this.completed = true
+      this.framesToComplete = frame
+    }
   }
 
   this.verifyObstacles = (obstacles) => {
+    if (this.crashed) return
+
     for (let obstacle of obstacles) {
       if (this.position.x < obstacle.position.x + obstacle.width
        && this.position.x > obstacle.position.x
@@ -53,8 +60,11 @@ function Drone(dna) {
     const distance = dist(this.position.x, this.position.y, target.position.x, target.position.y)
     this.fitness = 1 / distance
 
-    if (this.completed)
+
+    if (this.completed) {
       this.fitness *= 10
+      this.fitness += 1 / this.framesToComplete
+    }
     if (this.crashed)
       this.fitness /= 2
   }

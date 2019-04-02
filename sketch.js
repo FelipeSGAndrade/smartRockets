@@ -12,7 +12,7 @@ function setup() {
   population = new Population()
   frameParagraph = createP()
   maxFitParagraph = createP()
-  target = new Target(createVector(500, 240), 25)
+  createTarget(false)
 
   obstacles.push(new Obstacle(createVector(300, 200), 10, 100))
 }
@@ -31,4 +31,15 @@ function draw() {
   }
 
   frameParagraph.html(frame)
+}
+
+function mouseClicked() {
+  createTarget(true)
+}
+
+function createTarget(isMouseEvent) {
+  if (isMouseEvent)
+    target = new Target(createVector(mouseX, mouseY), 25)
+  else
+    target = new Target(createVector(500, 240), 25)
 }
