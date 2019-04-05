@@ -37,10 +37,10 @@ function Drone(dna) {
     if (this.crashed) return
 
     for (let obstacle of obstacles) {
-      if (this.position.x < obstacle.position.x + obstacle.width
-       && this.position.x > obstacle.position.x
-       && this.position.y < obstacle.position.y + obstacle.height
-       && this.position.y > obstacle.position.y) {
+      if (this.position.x < obstacle.endPosition.x + obstacle.width
+       && this.position.x > obstacle.beginPosition.x - obstacle.width
+       && this.position.y < obstacle.endPosition.y
+       && this.position.y > obstacle.beginPosition.y) {
           this.crashed = true
         }
     }
@@ -62,10 +62,9 @@ function Drone(dna) {
 
 
     if (this.completed) {
-      this.fitness *= 10
-      this.fitness += 1 / this.framesToComplete
+      this.fitness += 10 * ( 1 / this.framesToComplete )
     }
     if (this.crashed)
-      this.fitness /= 2
+      this.fitness /= 10
   }
 }

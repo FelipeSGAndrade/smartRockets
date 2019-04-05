@@ -1,9 +1,14 @@
-const lifespan = 200
+const lifespan = 300
 let population
 let target
 let frame = 0
 let frameParagraph
 let maxFitParagraph
+let isDragging
+let dragBeginX
+let dragBeginY
+let dragEndX
+let dragEndY
 
 const obstacles = []
 
@@ -14,7 +19,7 @@ function setup() {
   maxFitParagraph = createP()
   createTarget(false)
 
-  obstacles.push(new Obstacle(createVector(300, 200), 10, 100))
+  obstacles.push(new Obstacle(createVector(300, 200), createVector(300, 300)))
 }
 
 function draw() {
@@ -23,6 +28,10 @@ function draw() {
   target.draw()
 
   obstacles.forEach(obs => obs.draw())
+
+  if (isDragging) {
+    drawDragging()
+  }
   
   frame++  
   if (frame > lifespan) {
@@ -33,8 +42,36 @@ function draw() {
   frameParagraph.html(frame)
 }
 
+function drawDragging() {
+  push()
+  stroke(255, 255, 255, 150)
+  strokeWeight(10)
+  line(dragBeginX, dragBeginY, dragEndX, dragEndY)
+  pop()
+}
+
+function mousePressed() {
+  dragBeginX = mouseX
+  dragBeginY = mouseY
+}
+
+function mouseDragged() {
+  isDragging = true
+  dragEndX = mouseX
+  dragEndY = mouseY
+}
+
+function mouseReleased() {
+  if(isDragging) {
+    isDragging = false
+    obstacles.push(new Obstacle(createVector(dragBeginX, dragBeginY), createVector(dragEndX, dragEndY)))
+  }
+  else {
+    createTarget(true)
+  }
+}
+
 function mouseClicked() {
-  createTarget(true)
 }
 
 function createTarget(isMouseEvent) {
